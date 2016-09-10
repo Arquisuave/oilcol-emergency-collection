@@ -12,6 +12,10 @@ examples/blog/log
 *.o
 *.beam
 *.plt
+erl_crash.dump
+ebin
+rel/example_project
+.concrete/DEV_MODE
 .rebar
 log*/
 erl_crash.dump

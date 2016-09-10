@@ -1,4 +1,5 @@
-#canillita
+# oilcol-emergency-collection
+Erlang based application for processing incoming requests from Emergency Sensors
 
 Simple Paperboy-themed PubSub on top of REST+SSE.
 
