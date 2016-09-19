@@ -1,0 +1,31 @@
+<<<<<<< HEAD
+canillita.d
+relx
+_rel/
+.erlang.mk/
+db
+Mnesia*
+ebin
+deps
+doc
+examples/blog/log
+.eunit
+*.o
+*.beam
+*.plt
+.rebar
+log*/
+erl_crash.dump
+.erlang.mk.*
+=======
+.eunit
+deps
+*.o
+*.beam
+*.plt
+erl_crash.dump
+ebin
+rel/example_project
+.concrete/DEV_MODE
+.rebar
+>>>>>>> c95fac30807da797538d899fcefd3d7fef54f545

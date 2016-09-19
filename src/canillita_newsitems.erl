@@ -52,7 +52,7 @@
 sumo_schema() ->
   sumo:new_schema(
     ?MODULE,
-    [ sumo:new_field(id, binary, [id, unique])
+    [ sumo:new_field(id, binary, [id])
     , sumo:new_field(newspaper_name, string, [not_null])
     , sumo:new_field(title, string, [not_null])
     , sumo:new_field(body, binary, [not_null])

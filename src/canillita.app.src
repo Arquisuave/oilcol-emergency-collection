@@ -6,7 +6,6 @@
   {applications, [
       kernel,
       stdlib,
-      mnesia,
       sasl,
       sumo_rest,
       lasse

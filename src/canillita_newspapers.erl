@@ -50,7 +50,7 @@
 sumo_schema() ->
   sumo:new_schema(
     ?MODULE,
-    [ sumo:new_field(name, string, [id, unique])
+    [ sumo:new_field(name, string, [id, not_null])
     , sumo:new_field(description, string, [not_null])
     , sumo:new_field(created_at, datetime, [not_null])
     , sumo:new_field(updated_at, datetime, [not_null])
@@ -73,7 +73,8 @@ sumo_wakeup(Newspaper) -> Newspaper.
 %% @doc Convert a newspaper from its system representation to json.
 -spec to_json(Newspaper::newspaper()) -> sr_json:json().
 to_json(Newspaper) ->
-  #{ name         => maps:get(name, Newspaper)
+   io:format("Outta here!~n"),
+  #{  name         => maps:get(name, Newspaper)
    , description  => maps:get(description, Newspaper)
    , created_at   => sr_json:encode_date(maps:get(created_at, Newspaper))
    , updated_at   => sr_json:encode_date(maps:get(updated_at, Newspaper))
@@ -83,10 +84,11 @@ to_json(Newspaper) ->
 -spec from_json(Json::sumo_rest_doc:json()) ->
   {ok, newspaper()} | {error, iodata()}.
 from_json(Json) ->
+  io:format("Here I Am!~n"),
   Now = sr_json:encode_date(calendar:universal_time()),
   try
     { ok
-    , #{ name => maps:get(<<"name">>, Json)
+    , #{  name => maps:get(<<"name">>, Json)
        , description => maps:get(<<"description">>, Json)
        , created_at =>
            sr_json:decode_date(maps:get(<<"created_at">>, Json, Now))
@@ -126,6 +128,8 @@ id(Newspaper) -> name(Newspaper).
 
 -spec new(Name::name(), Description::description()) -> newspaper().
 new(Name, Description) ->
+  io:format("Name: ~s~n", [Name]),
+  io:format("Description: ~s~n", [Name]),
   Now = calendar:universal_time(),
   #{ name         => Name
    , description  => Description
