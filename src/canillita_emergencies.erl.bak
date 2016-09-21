@@ -1,0 +1,141 @@
+%%% @doc Newspapers Model
+-module(canillita_emergencies).
+
+-behaviour(sumo_doc).
+-behaviour(sumo_rest_doc).
+
+-type name() :: integer().
+-type tipo() :: binary().
+-type pozo() :: integer().
+
+-opaque emergency() ::
+  #{ name  => name() | undefined
+   , tipo  => tipo()
+   , pozo   => pozo()
+   , timestamp   => calendar:datetime()
+   }.
+
+-export_type(
+  [ name/0
+  , tipo/0
+  , pozo/0
+  , emergency/0
+  ]).
+
+%% sumo_doc behaviour
+-export(
+  [ sumo_schema/0
+  , sumo_sleep/1
+  , sumo_wakeup/1
+  ]).
+
+%% sumo_rest_doc behaviour
+-export(
+  [ to_json/1
+  , from_json/1
+  , update/2
+  , location/2
+  , id/1
+  ]).
+
+%% public API
+-export(
+  [ new/2
+  ]).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% sumo_doc behaviour callbacks
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+-spec sumo_schema() -> sumo:schema().
+sumo_schema() ->
+  sumo:new_schema(
+    ?MODULE,
+    [ sumo:new_field(name, integer, [id, auto_increment])
+    , sumo:new_field(pozo, integer, [not_null])
+    , sumo:new_field(tipo, string, [not_null])
+    , sumo:new_field(timestamp, datetime, [not_null])
+    ]).
+
+%% @doc Convert a newspaper from its system representation to sumo's
+%%      internal one.
+-spec sumo_sleep(Emergency::emergency()) -> sumo:doc().
+sumo_sleep(Emergency) -> Emergency.
+
+%% @doc Convert a Emergency from sumo's internal representation to its
+%%      system one.
+-spec sumo_wakeup(Emergency::sumo:doc()) -> emergency().
+sumo_wakeup(Emergency) -> Emergency.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% sumo_rest_doc behaviour callbacks
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% @doc Convert a newspaper from its system representation to json.
+-spec to_json(Emergency::emergency()) -> sr_json:json().
+to_json(Emergency) ->
+   io:format("Outta here!~n"),
+  #{  name         => maps:get(name, Emergency)
+   , pozo  => maps:get(pozo, Emergency)
+   , tipo  => maps:get(tipo, Emergency)
+   , timestamp   => sr_json:encode_date(maps:get(timestamp, Emergency))
+   }.
+
+%% @doc Convert a Emergency from json to its system representation.
+-spec from_json(Json::sumo_rest_doc:json()) ->
+  {ok, emergency()} | {error, iodata()}.
+from_json(Json) ->
+  io:format("Here I Am!~n"),
+  Now = sr_json:encode_date(calendar:universal_time()),
+  try
+    { ok
+    , #{ 
+         tipo => maps:get(<<"tipo">>, Json)
+       , pozo => maps:get(<<"pozo">>, Json)
+       , timestamp =>
+           sr_json:decode_date(maps:get(<<"timestamp">>, Json, Now))
+       }
+    }
+  catch
+    _: {badkey, Key} -> {error, <<"missing field: ", Key/binary>>}
+  end.
+
+-spec update(Emergency::emergency(), Json::sumo_rest_doc:json()) ->
+  {ok, emergency()} | {error, iodata()}.
+update(Emergency, Json) ->
+  try
+    NewTipo = maps:get(<<"tipo">>, Json),
+    NewPozo = maps:get(<<"pozo">>, Json),
+    UpdatedEmergency =
+      Emergency#{pozo := NewPozo,
+                 tipo := NewTipo,
+                 timestamp := calendar:universal_time()},
+    {ok, UpdatedEmergency}
+  catch
+    _:{badkey, Key} -> {error, <<"missing field: ", Key/binary>>}
+  end.
+
+%% @doc Specify the uri part that uniquely identifies a Newspaper.
+% -spec location(Emergency::emergency(), Path::sumo_rest_doc:path()) -> iodata().
+% location(Emergency, Path) -> iolist_to_binary([Path, $/, name(Emergency)]).
+
+%% @doc Optional callback id/1 to let sumo_rest avoid duplicated keys (and
+%%      return `409 Conflict` in that case).
+-spec id(Emergency::emergency()) -> name().
+id(Emergency) -> name(Emergency).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% public API
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+-spec new(Tipo::tipo(), Pozo::pozo()) -> emergency().
+new(Tipo, Pozo) ->
+  % io:format("Name: ~s~n", [Name]),
+  % io:format("Description: ~s~n", [Name]),
+  Now = calendar:universal_time(),
+  #{ tipo   => Tipo
+   , pozo   => Pozo
+   , timestamp => Now
+   }.
+
+

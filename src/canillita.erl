@@ -39,13 +39,13 @@ stop(_State) ->
 -spec start_phase(atom(), StartType::application:start_type(), []) ->
   ok | {error, _}.
 start_phase(create_schema, _StartType, []) ->
-  % _ = application:stop(sumo_db_psql),
-  % Node = node(),
-  % case sumo_db_psql:create_schema([Node]) of
-  %   ok -> ok;
-  %   {error, {Node, {already_exists, Node}}} -> ok
-  % end,
-  % {ok, _} = application:ensure_all_started(sumo_db_psql),
+  _ = application:stop(mnesia),
+  Node = node(),
+  case mnesia:create_schema([Node]) of
+    ok -> ok;
+    {error, {Node, {already_exists, Node}}} -> ok
+  end,
+  {ok, _} = application:ensure_all_started(mnesia),
   % Create persistency schema
   sumo:create_schema();
 start_phase(start_cowboy_listeners, _StartType, []) ->
@@ -55,6 +55,7 @@ start_phase(start_cowboy_listeners, _StartType, []) ->
     , canillita_newsitems_handler
     , canillita_single_newsitem_handler
     , canillita_news_handler
+    , canillita_emergencies_handler
     , cowboy_swagger_handler
     ],
   % Get the trails for each handler

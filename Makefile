@@ -2,7 +2,7 @@ PROJECT = canillita
 
 CONFIG ?= test/test.config
 
-DEPS = lager sumo_rest mixer lasse katana swagger sumo_db trails cowboy sumo_db_pgsql
+DEPS = lager sumo_rest mixer lasse katana swagger sumo_db trails cowboy
 SHELL_DEPS = sync
 TEST_DEPS = shotgun katana_test
 BUILD_DEPS = inaka_mk
@@ -22,7 +22,7 @@ dep_sumo_db = git https://github.com/inaka/sumo_db.git 0.4.0
 dep_trails = git https://github.com/inaka/cowboy-trails.git 0.1.1
 dep_inaka_mk = git https://github.com/inaka/inaka.mk.git 1.0.0
 dep_katana_test = git https://github.com/inaka/katana-test.git 0.0.6
-dep_sumo_db_pgsql = git https://github.com/andfoy/sumo_db_pgsql.git 0.1.1-beta
+# dep_sumo_db_pgsql = git https://github.com/andfoy/sumo_db_pgsql.git 0.1.1-beta
 
 DEP_PLUGINS = inaka_mk
 
