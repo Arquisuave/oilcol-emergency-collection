@@ -55,7 +55,9 @@ start_phase(start_cowboy_listeners, _StartType, []) ->
     , canillita_newsitems_handler
     , canillita_single_newsitem_handler
     , canillita_news_handler
+    , canillita_emergencies_sse_handler
     , canillita_emergencies_handler
+    , canillita_single_emergency_handler
     , cowboy_swagger_handler
     ],
   application:start(sync),
@@ -78,6 +80,8 @@ start_phase(start_canillita_events_management, _StartType, []) ->
   % Set the handler for processing SumoDB events
   ok = gen_event:add_handler( canillita_newsitems_events_manager
                             , canillita_newsitems_events_handler
+                            % , canillita_emergencies_events_manager
+                            % , canillita_emergencies_events_handler
                             , []
                             ),
   % Create pg2 group to hold news listeners

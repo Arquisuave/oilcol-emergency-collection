@@ -1,4 +1,4 @@
--module(canillita_newsitems_events_handler).
+-module(canillita_emergencies_events_handler).
 
 -behaviour(gen_event).
 

@@ -13,6 +13,7 @@
           , content_types_accepted/2
           , content_types_provided/2
           , handle_post/3
+          , handle_get/2
           ]
         }]).
 
@@ -30,7 +31,13 @@ trails() ->
      , required => true
      },
   Metadata =
-    #{ post =>
+    #{ get =>
+       #{ tags => ["emergencies"]
+        , description => "Returns the list of emergencies"
+        , produces => ["application/json"] 
+
+        }
+     , post =>
        #{ tags => ["emergencies"]
         , description => "Creates a new emergency"
         , consumes => ["application/json"]
@@ -51,7 +58,7 @@ handle_post(Req, State) ->
   try
     {ok, Body, Req1}      = cowboy_req:body(Req),
     % io.format(Body).
-    erlang:display(Body),
+    % erlang:display(Body),
     Json                  = sr_json:decode(Body),
     % Checks that the given newspaper does exists
         case canillita_emergencies:from_json(Json) of

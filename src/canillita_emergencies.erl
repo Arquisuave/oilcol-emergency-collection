@@ -7,6 +7,7 @@
 -type id() :: binary().
 -type pozo() :: integer().
 -type tipo() :: binary().
+-type timestamp() :: calendar:datetime().
 
 -opaque emergency() ::
   #{ id => id() | undefined
@@ -20,6 +21,7 @@
   , pozo/0
   , tipo/0
   , emergency/0
+  , timestamp/0
   ]).
 
 %% sumo_doc behaviour callbacks
@@ -117,10 +119,11 @@ location(#{id := EmergencyId, pozo := Pozo}, _Path) ->
 %% @doc Convert a newspaper from its system representation to SSE.
 -spec to_sse(Emergency::emergency()) -> lasse_handler:event().
 to_sse(Emergency) ->
+  % erlang:display(Emergency),
   #{ id => maps:get(id, Emergency)
    , event => maps:get(tipo, Emergency)
    , data => iolist_to_binary([ maps:get(pozo, Emergency)
                               , "\n"
-                              , maps:get(timestamp, Emergency)
+                              , maps:get(tipo, Emergency)
                               ])
    }.
