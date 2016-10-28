@@ -50,6 +50,8 @@ trails() ->
 handle_post(Req, State) ->
   try
     {ok, Body, Req1}      = cowboy_req:body(Req),
+    % io.format(Body).
+    erlang:display(Body),
     Json                  = sr_json:decode(Body),
     % Checks that the given newspaper does exists
         case canillita_emergencies:from_json(Json) of

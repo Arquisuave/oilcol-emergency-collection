@@ -58,7 +58,7 @@ start_phase(start_cowboy_listeners, _StartType, []) ->
     , canillita_emergencies_handler
     , cowboy_swagger_handler
     ],
-  application:start(sync),
+  PrivDir = code:priv_dir(canillita),
   % Get the trails for each handler
   Routes = trails:trails(Handlers),
   % Store them so Cowboy is able to get them
@@ -66,7 +66,10 @@ start_phase(start_cowboy_listeners, _StartType, []) ->
   % Set server routes
   Dispatch = trails:single_host_compile(Routes),
   % Set the options for the TCP layer
-  TransOpts = [{port, 4892}],
+  TransOpts = [{port, 4892}, 
+               {cacertfile, "../ssl/cowboy-ca.crt"}, 
+               {certfile, "../ssl/server.crt"}, 
+               {keyfile, "../ssl/server.key"}],
   % Set the options for the HTTP layer
   ProtoOpts = [{env, [{dispatch, Dispatch}, {compress, true}]}],
   % Start Cowboy HTTP server
