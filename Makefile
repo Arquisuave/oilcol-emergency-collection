@@ -6,8 +6,8 @@ DEPS = lager sumo_rest mixer lasse katana swagger sumo_db trails cowboy
 SHELL_DEPS = sync
 TEST_DEPS = shotgun katana_test
 BUILD_DEPS = inaka_mk reload_mk
-LOCAL_DEPS = tools compiler syntax_tools common_test inets test_server
-LOCAL_DEPS += dialyzer wx
+LOCAL_DEPS = tools compiler syntax_tools common_test inets test_server ssl
+LOCAL_DEPS += dialyzer wx 
 
 dep_lager = git https://github.com/basho/lager.git 3.2.1
 dep_sumo_rest = git https://github.com/inaka/sumo_rest.git 0.1.2

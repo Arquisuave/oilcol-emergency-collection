@@ -67,13 +67,13 @@ start_phase(start_cowboy_listeners, _StartType, []) ->
   Dispatch = trails:single_host_compile(Routes),
   % Set the options for the TCP layer
   TransOpts = [{port, 4892}, 
-               {cacertfile, "../ssl/cowboy-ca.crt"}, 
-               {certfile, "../ssl/server.crt"}, 
-               {keyfile, "../ssl/server.key"}],
+               {cacertfile, "cowboy-ca.crt"}, 
+               {certfile, "server.crt"}, 
+               {keyfile, "server.key"}],
   % Set the options for the HTTP layer
   ProtoOpts = [{env, [{dispatch, Dispatch}, {compress, true}]}],
   % Start Cowboy HTTP server
-  case cowboy:start_http(canillita_server, 1, TransOpts, ProtoOpts) of
+  case cowboy:start_https(canillita_server, 1, TransOpts, ProtoOpts) of
     {ok, _} -> ok;
     {error, {already_started, _}} -> ok
   end;
